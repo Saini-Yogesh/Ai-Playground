@@ -160,7 +160,7 @@ ai-debate-playground/
 │   │   └── agents.js         # Strict validation for agent model/prompt specs
 │   ├── services/
 │   │   ├── debateService.js  # Turn orchestration state machine & limits
-│   │   ├── groqService.js    # Groq API client with error mapping
+│   │   ├── groqService.js    # Groq API client with error mapping & model params (temperature, maxTokens)
 │   │   ├── contextManager.js # Stateless complete dialogue context builder
 │   │   └── fileService.js    # Atomic JSON filesystem storage
 │   ├── utils/
@@ -187,6 +187,17 @@ ai-debate-playground/
 ├── ARCHITECTURE.md           # Deep-dive system design & architectural diagrams
 └── README.md                 # Project documentation
 ```
+
+---
+
+## ⚙️ LLM Generation Configuration
+
+The [`GroqService`](./src/services/groqService.js) accepts model generation parameters to control response behavior:
+
+| Parameter | Default | Purpose & Importance |
+| :--- | :--- | :--- |
+| **`temperature`** | `0.7` | Controls sampling randomness. `0.7` provides a sweet spot for debate—ensuring creative, varied arguments without sacrificing logical coherence or repeating phrasing turn-after-turn. |
+| **`maxTokens`** | `1024` | Sets upper limit on generated response length (~750–800 words). Prevents run-away token usage, limits API latency, and provides adequate token headroom for reasoning models (e.g. GPT-OSS / DeepSeek) to complete internal step-by-step thinking (`reasoning_content`) before emitting final text. |
 
 ---
 

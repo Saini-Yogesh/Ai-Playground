@@ -176,3 +176,6 @@ Turn N: Max Turns Boundary Reached
 1. **No Secret Leaks**: API keys are loaded strictly from `.env` and never written to disk transcripts, logs, or error messages.
 2. **Git Privacy**: `.gitignore` ensures that `.env`, `debate-input.json`, and dynamic outputs `data/debates/deb_*.json` are never committed to version control.
 3. **Pluggable Architecture**: The LLM interaction is isolated in `src/services/groqService.js` and context assembly in `src/services/contextManager.js`, allowing future extensions (e.g. OpenAI, Anthropic, Ollama, or context compression/RAG) without touching the orchestration engine.
+4. **LLM Generation Controls (`temperature` & `maxTokens`)**:
+   - `temperature = 0.7`: Controls response creativity. Balances logical rigour with expressive phrasing across multiple turns.
+   - `maxTokens = 1024`: Imposes a strict token ceiling (~800 words) per turn to cap latency/costs and allow reasoning models sufficient headroom for step-by-step thinking (`reasoning_content`) before generating text.
