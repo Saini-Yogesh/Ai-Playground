@@ -168,11 +168,32 @@ export class DebateService {
           "Debate",
           `Turn ${nextTurnNumber} failed for Agent ${currentAgentId}: ${err.message}`,
         );
+
+        // Record the failed turn as an error message so it's never lost
+        const errorMessage = {
+          role: "error",
+          agent: currentAgentId,
+          content: `⚠️ Turn failed: ${err.message}`,
+          turn: nextTurnNumber,
+          timestamp: new Date().toISOString(),
+          error: true,
+        };
+        debate.messages.push(errorMessage);
+        debate.turn = nextTurnNumber;
         debate.status = "failed";
         debate.error = `Turn ${nextTurnNumber} failed (${agentConfig.name}): ${err.message}`;
         debate.updatedAt = new Date().toISOString();
         await this.storage.updateDebate(debateId, debate);
-        throw err;
+
+        return {
+          success: false,
+          debateId: debate.id,
+          turn: nextTurnNumber,
+          agent: currentAgentId,
+          response: errorMessage.content,
+          status: "failed",
+          error: err.message,
+        };
       }
 
       const newMessage = {

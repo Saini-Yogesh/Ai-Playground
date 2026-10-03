@@ -22,7 +22,7 @@ export class GroqService {
     apiKey,
     model,
     messages,
-    temperature = 0.7,
+    temperature = 1.9,
     maxTokens = 1024,
   }) {
     if (!apiKey) {

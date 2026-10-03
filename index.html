@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   
   <style>
     :root {
@@ -255,6 +256,18 @@
       border: 1px solid rgba(239, 68, 68, 0.35);
     }
 
+    .message-card.error-card {
+      background: linear-gradient(180deg, rgba(239, 68, 68, 0.06), rgba(18, 24, 38, 0.75));
+      border-color: rgba(239, 68, 68, 0.35);
+      border-left: 4px solid #f87171;
+    }
+
+    .avatar-error {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
     .error-notice-card {
       background: rgba(239, 68, 68, 0.12);
       border: 1px solid rgba(239, 68, 68, 0.35);
@@ -447,7 +460,42 @@
       font-size: 0.95rem;
       line-height: 1.65;
       color: #cbd5e1;
-      white-space: pre-wrap;
+    }
+
+    .message-body p {
+      margin-bottom: 0.75rem;
+    }
+
+    .message-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .message-body strong {
+      color: #f8fafc;
+      font-weight: 700;
+    }
+
+    .message-body em {
+      color: #e2e8f0;
+      font-style: italic;
+    }
+
+    .message-body ul, .message-body ol {
+      margin-left: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .message-body li {
+      margin-bottom: 0.25rem;
+    }
+
+    .message-body code {
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.85em;
+      color: #38bdf8;
     }
 
     .message-footer {
@@ -673,6 +721,21 @@
       return 'badge-success';
     }
 
+    function renderMarkdown(text) {
+      if (!text) return '';
+      try {
+        if (typeof marked !== 'undefined' && typeof marked.parse === 'function') {
+          return marked.parse(text);
+        }
+      } catch (e) {
+        console.warn('Marked parsing fallback:', e);
+      }
+      return escapeHtml(text)
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/\n\n/g, '<br><br>');
+    }
+
     function renderSidebar(debates) {
       debateListEl.innerHTML = '';
       debateCountBadge.textContent = `${debates.length}`;
@@ -815,7 +878,7 @@
                   </div>
                   <span class="turn-badge">Turn 0</span>
                 </div>
-                <div class="message-body">${escapeHtml(msg.content)}</div>
+                <div class="message-body">${renderMarkdown(msg.content)}</div>
                 <div class="message-footer">
                   <span>${msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : ''}</span>
                   <button class="copy-btn" onclick="copyText('${escapeQuotes(msg.content)}')">📋 Copy</button>
@@ -832,7 +895,7 @@
                   </div>
                   <span class="turn-badge">Turn ${msg.turn}</span>
                 </div>
-                <div class="message-body">${escapeHtml(msg.content)}</div>
+                <div class="message-body">${renderMarkdown(msg.content)}</div>
                 <div class="message-footer">
                   <span>${msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : ''}</span>
                   <button class="copy-btn" onclick="copyText('${escapeQuotes(msg.content)}')">📋 Copy</button>
@@ -849,10 +912,27 @@
                   </div>
                   <span class="turn-badge">Turn ${msg.turn}</span>
                 </div>
-                <div class="message-body">${escapeHtml(msg.content)}</div>
+                <div class="message-body">${renderMarkdown(msg.content)}</div>
                 <div class="message-footer">
                   <span>${msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : ''}</span>
                   <button class="copy-btn" onclick="copyText('${escapeQuotes(msg.content)}')">📋 Copy</button>
+                </div>
+              </div>
+            `;
+          } else if (msg.role === 'error') {
+            const errorAgentName = msg.agent === 'A' ? agentAName : msg.agent === 'B' ? agentBName : 'System';
+            html += `
+              <div class="message-card error-card">
+                <div class="message-header">
+                  <div class="speaker-identity">
+                    <div class="avatar avatar-error">⚠️</div>
+                    <div><div class="speaker-name" style="color: #f87171;">${escapeHtml(errorAgentName)} — Failed</div></div>
+                  </div>
+                  <span class="turn-badge">Turn ${msg.turn}</span>
+                </div>
+                <div class="message-body" style="color:#fca5a5;">${renderMarkdown(msg.content)}</div>
+                <div class="message-footer">
+                  <span>${msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : ''}</span>
                 </div>
               </div>
             `;

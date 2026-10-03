@@ -78,6 +78,12 @@ async function run() {
 
       debate.turn = turnResult.turn;
       debate.status = turnResult.status;
+
+      // If the turn failed, log and stop
+      if (!turnResult.success || turnResult.status === "failed") {
+        console.log(`\n⚠️ Turn ${turnResult.turn} failed: ${turnResult.error || "Unknown error"}`);
+        break;
+      }
     }
 
     if (debate.status === "completed") {
@@ -88,10 +94,14 @@ async function run() {
       console.log(`Saved partial transcript: data/debates/${debate.id}.json\n`);
     }
   } catch (err) {
+    // Safety net for truly unexpected errors (not LLM failures)
     if (debate && debate.id) {
-      debate.status = "failed";
-      debate.error = err.message;
-      await fileService.updateDebate(debate.id, debate).catch(() => {});
+      const savedDebate = await fileService.getDebate(debate.id).catch(() => null);
+      if (savedDebate) {
+        savedDebate.status = "failed";
+        savedDebate.error = err.message;
+        await fileService.updateDebate(debate.id, savedDebate).catch(() => {});
+      }
     }
     throw err;
   }
