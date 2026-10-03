@@ -2,7 +2,7 @@
 
 A local, lightweight, and extensible **multi-agent AI debate orchestration engine** powered by Node.js and the **Groq API**.
 
-Two AI agents (**Agent A** and **Agent B**) debate autonomously turn-by-turn with user-defined models, personalities, and reasoning stances. The entire dialogue is driven by a single input file ([debate-input.json](file:///c:/Users/yoges/Desktop/GitHub/Ai-Playground/debate-input.json)), streamed live to the console, and automatically saved to structured JSON files.
+Two AI agents (**Agent A** and **Agent B**) debate autonomously turn-by-turn with user-defined models, personalities, and reasoning stances. The entire dialogue is driven by a single input file ([debate-input.json](./debate-input.json)), streamed live to the console, and automatically saved to structured JSON files.
 
 ---
 
@@ -35,18 +35,18 @@ Copy the example environment file and add your Groq API keys:
 ```bash
 cp .env.example .env
 ```
-Edit [.env](file:///c:/Users/yoges/Desktop/GitHub/Ai-Playground/.env):
+Edit [.env](./.env):
 ```env
 GROQ_API_KEY_A=gsk_your_first_groq_api_key
 GROQ_API_KEY_B=gsk_your_second_groq_api_key
 ```
 
 ### 4. Configure Your Debate
-Copy the template file to create your local [debate-input.json](file:///c:/Users/yoges/Desktop/GitHub/Ai-Playground/debate-input.json):
+Copy the template file to create your local [debate-input.json](./debate-input.json):
 ```bash
 cp debate-input.example.json debate-input.json
 ```
-Customize your debate settings in [debate-input.json](file:///c:/Users/yoges/Desktop/GitHub/Ai-Playground/debate-input.json):
+Customize your debate settings in [debate-input.json](./debate-input.json):
 ```json
 {
   "topic": "Should artificial intelligence replace software engineers in the next 10 years?",
@@ -93,11 +93,21 @@ Saved transcript: data/debates/deb_a8f1e29c.json
 
 ---
 
+## 🌐 Visual Transcript Viewer (`index.html`)
+
+You can view your saved debates visually with the lightweight, self-contained **[index.html](./index.html)**:
+
+1. Double-click or open **`index.html`** in any browser (Chrome, Edge, Firefox, Safari).
+2. Click **"📂 Load Debate JSON"** or simply drag & drop any `.json` file from `data/debates/`.
+3. Switch seamlessly between multiple debate sessions in the sidebar!
+
+---
+
 ## 📂 Output & Persistence
 
 Every debate is stored as an independent JSON record in `data/debates/<debate-id>.json`.
 
-See [data/debates/sample_output.json](file:///c:/Users/yoges/Desktop/GitHub/Ai-Playground/data/debates/sample_output.json) for a full example.
+See [data/debates/sample_output.json](./data/debates/sample_output.json) for a full example.
 
 ```json
 {

@@ -60,15 +60,15 @@ This document details the complete end-to-end architecture, module responsibilit
 
 | Module | File | Purpose |
 | :--- | :--- | :--- |
-| **Runner** | [src/index.js](file:///c:/Users/yoges/Desktop/GitHub/Ai-Playground/src/index.js) | Entrypoint that loads `debate-input.json`, validates the environment, initiates the debate, streams turns live, and outputs the saved transcript location. |
-| **Env Config** | [src/config/env.js](file:///c:/Users/yoges/Desktop/GitHub/Ai-Playground/src/config/env.js) | Validates that required secret keys (`GROQ_API_KEY_A`, `GROQ_API_KEY_B`) are present in `.env`. Fails immediately if any key is missing. |
-| **Agent Config** | [src/config/agents.js](file:///c:/Users/yoges/Desktop/GitHub/Ai-Playground/src/config/agents.js) | Validates user-defined agent parameters (name, model, system prompt) from `debate-input.json`. Rejects incomplete definitions without hidden fallbacks. |
-| **Debate Engine** | [src/services/debateService.js](file:///c:/Users/yoges/Desktop/GitHub/Ai-Playground/src/services/debateService.js) | Owns the orchestration state machine, coordinates agent turns, checks termination boundaries (`turn >= maxTurns`), and prevents race conditions. |
-| **Context Manager** | [src/services/contextManager.js](file:///c:/Users/yoges/Desktop/GitHub/Ai-Playground/src/services/contextManager.js) | Transforms raw debate history into structured, stateless messages for the LLM. Formats previous turns clearly (`role: "assistant"` for the agent's own past statements, `role: "user"` with `[Agent X]:` prefix for the opponent). |
-| **Groq Client** | [src/services/groqService.js](file:///c:/Users/yoges/Desktop/GitHub/Ai-Playground/src/services/groqService.js) | Dedicated Groq API client with error mapping (`INVALID_API_KEY`, `RATE_LIMIT_EXCEEDED`, `MODEL_NOT_FOUND`) and credential sanitization. |
-| **Storage Engine** | [src/services/fileService.js](file:///c:/Users/yoges/Desktop/GitHub/Ai-Playground/src/services/fileService.js) | Handles atomic JSON persistence in `data/debates/<debateId>.json`. |
-| **Concurrency Lock** | [src/utils/lockManager.js](file:///c:/Users/yoges/Desktop/GitHub/Ai-Playground/src/utils/lockManager.js) | In-memory mutex preventing overlapping turn execution on the same debate. |
-| **Error Handling** | [src/utils/errors.js](file:///c:/Users/yoges/Desktop/GitHub/Ai-Playground/src/utils/errors.js) | Standardized `AppError` class and centralized `ErrorCodes`. |
+| **Runner** | [src/index.js](./src/index.js) | Entrypoint that loads `debate-input.json`, validates the environment, initiates the debate, streams turns live, and outputs the saved transcript location. |
+| **Env Config** | [src/config/env.js](./src/config/env.js) | Validates that required secret keys (`GROQ_API_KEY_A`, `GROQ_API_KEY_B`) are present in `.env`. Fails immediately if any key is missing. |
+| **Agent Config** | [src/config/agents.js](./src/config/agents.js) | Validates user-defined agent parameters (name, model, system prompt) from `debate-input.json`. Rejects incomplete definitions without hidden fallbacks. |
+| **Debate Engine** | [src/services/debateService.js](./src/services/debateService.js) | Owns the orchestration state machine, coordinates agent turns, checks termination boundaries (`turn >= maxTurns`), and prevents race conditions. |
+| **Context Manager** | [src/services/contextManager.js](./src/services/contextManager.js) | Transforms raw debate history into structured, stateless messages for the LLM. Formats previous turns clearly (`role: "assistant"` for the agent's own past statements, `role: "user"` with `[Agent X]:` prefix for the opponent). |
+| **Groq Client** | [src/services/groqService.js](./src/services/groqService.js) | Dedicated Groq API client with error mapping (`INVALID_API_KEY`, `RATE_LIMIT_EXCEEDED`, `MODEL_NOT_FOUND`) and credential sanitization. |
+| **Storage Engine** | [src/services/fileService.js](./src/services/fileService.js) | Handles atomic JSON persistence in `data/debates/<debateId>.json`. |
+| **Concurrency Lock** | [src/utils/lockManager.js](./src/utils/lockManager.js) | In-memory mutex preventing overlapping turn execution on the same debate. |
+| **Error Handling** | [src/utils/errors.js](./src/utils/errors.js) | Standardized `AppError` class and centralized `ErrorCodes`. |
 
 ---
 
