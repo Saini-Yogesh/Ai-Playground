@@ -1,0 +1,59 @@
+{
+  "id": "deb_sample_debate_01",
+  "topic": "Should artificial intelligence replace software engineers in the next 10 years?",
+  "status": "completed",
+  "currentAgent": "A",
+  "turn": 4,
+  "maxTurns": 4,
+  "customAgents": {
+    "A": {
+      "name": "Agent A (Affirmative / Pro-Automation)",
+      "model": "llama-3.3-70b-versatile",
+      "systemPrompt": "You are Agent A in a high-level academic debate. Defend the proposition that AI will replace the majority of traditional software engineering roles within 10 years."
+    },
+    "B": {
+      "name": "Agent B (Critical / Human-Centric)",
+      "model": "llama-3.3-70b-versatile",
+      "systemPrompt": "You are Agent B in a high-level academic debate. Challenge the proposition and defend the enduring necessity of human software engineers."
+    }
+  },
+  "messages": [
+    {
+      "role": "user",
+      "agent": null,
+      "content": "Should artificial intelligence replace software engineers in the next 10 years?",
+      "turn": 0,
+      "timestamp": "2026-10-03T07:00:00.000Z"
+    },
+    {
+      "role": "assistant",
+      "agent": "A",
+      "content": "Artificial intelligence is fundamentally transforming software engineering. Over the next decade, advances in neural code synthesis, autonomous agentic loops, automated unit and regression testing, and self-optimizing compilers will automate the repetitive coding tasks that occupy the bulk of traditional developer hours. Autonomous coding agents are already solving end-to-end GitHub issues and deploying verified microservices, compressing multi-week development cycles into minutes.",
+      "turn": 1,
+      "timestamp": "2026-10-03T07:00:15.000Z"
+    },
+    {
+      "role": "assistant",
+      "agent": "B",
+      "content": "While AI undeniably accelerates syntax production and boilerplate generation, writing code represents only a small fraction of software engineering. True software engineering centers on ambiguous requirements discovery, socio-technical domain empathy, high-reliability architecture, security threat modeling, and legal compliance. LLMs operate on statistical pattern replication; they lack causal reasoning and real-world accountability when catastrophic system failures occur.",
+      "turn": 2,
+      "timestamp": "2026-10-03T07:00:30.000Z"
+    },
+    {
+      "role": "assistant",
+      "agent": "A",
+      "content": "Agent B underestimates the compounding trajectory of autonomous reasoning systems. Formal mathematical verification, automated architecture solvers, and multimodal design interpreters are increasingly removing ambiguity before code is generated. As developer agents collaborate in multi-agent orchestration architectures, the human role transitions from active engineer to high-level strategic governor, effectively replacing the traditional engineer persona.",
+      "turn": 3,
+      "timestamp": "2026-10-03T07:00:45.000Z"
+    },
+    {
+      "role": "assistant",
+      "agent": "B",
+      "content": "Transitioning human engineers into high-level strategic governors and ethical arbiters proves the point: the core intellectual discipline of software engineering is not eliminated—it evolves. As software complexity explodes due to AI-generated volume, the demand for human discernment, ethical boundaries, and novel system orchestration will become even more vital. AI will amplify engineers, not replace the human mind behind the systems.",
+      "turn": 4,
+      "timestamp": "2026-10-03T07:01:00.000Z"
+    }
+  ],
+  "createdAt": "2026-10-03T07:00:00.000Z",
+  "updatedAt": "2026-10-03T07:01:00.000Z"
+}

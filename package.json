@@ -1,0 +1,25 @@
+{
+  "name": "ai-debate-playground",
+  "version": "1.0.0",
+  "description": "Local AI Debate Playground with Groq API and JSON persistence",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node src/index.js",
+    "test": "node test/test_flow.js"
+  },
+  "keywords": [
+    "ai",
+    "debate",
+    "groq",
+    "multi-agent",
+    "orchestration"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "groq-sdk": "^0.15.0"
+  }
+}
