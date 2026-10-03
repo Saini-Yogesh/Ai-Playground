@@ -168,6 +168,10 @@ export class DebateService {
           "Debate",
           `Turn ${nextTurnNumber} failed for Agent ${currentAgentId}: ${err.message}`,
         );
+        debate.status = "failed";
+        debate.error = `Turn ${nextTurnNumber} failed (${agentConfig.name}): ${err.message}`;
+        debate.updatedAt = new Date().toISOString();
+        await this.storage.updateDebate(debateId, debate);
         throw err;
       }
 

@@ -56,26 +56,45 @@ async function run() {
     `Agent B: ${customAgents.B.name} (Model: ${customAgents.B.model})\n`,
   );
 
-  const debate = await debateService.createDebate({
-    topic,
-    maxTurns,
-    customAgents,
-  });
+  let debate;
+  try {
+    debate = await debateService.createDebate({
+      topic,
+      maxTurns,
+      customAgents,
+    });
 
-  while (debate.status !== "completed" && debate.turn < maxTurns) {
-    const turnResult = await debateService.executeNextTurn(debate.id);
-    const agentName =
-      customAgents[turnResult.agent]?.name || `Agent ${turnResult.agent}`;
+    while (
+      debate.status !== "completed" &&
+      debate.status !== "failed" &&
+      debate.turn < maxTurns
+    ) {
+      const turnResult = await debateService.executeNextTurn(debate.id);
+      const agentName =
+        customAgents[turnResult.agent]?.name || `Agent ${turnResult.agent}`;
 
-    console.log(`--- [Turn ${turnResult.turn}/${maxTurns}] ${agentName} ---`);
-    console.log(`${turnResult.response}\n`);
+      console.log(`--- [Turn ${turnResult.turn}/${maxTurns}] ${agentName} ---`);
+      console.log(`${turnResult.response}\n`);
 
-    debate.turn = turnResult.turn;
-    debate.status = turnResult.status;
+      debate.turn = turnResult.turn;
+      debate.status = turnResult.status;
+    }
+
+    if (debate.status === "completed") {
+      console.log(`=== DEBATE COMPLETED ===`);
+      console.log(`Saved transcript: data/debates/${debate.id}.json\n`);
+    } else if (debate.status === "failed") {
+      console.log(`=== DEBATE FAILED ===`);
+      console.log(`Saved partial transcript: data/debates/${debate.id}.json\n`);
+    }
+  } catch (err) {
+    if (debate && debate.id) {
+      debate.status = "failed";
+      debate.error = err.message;
+      await fileService.updateDebate(debate.id, debate).catch(() => {});
+    }
+    throw err;
   }
-
-  console.log(`=== DEBATE COMPLETED ===`);
-  console.log(`Saved transcript: data/debates/${debate.id}.json\n`);
 }
 
 run().catch((err) => {

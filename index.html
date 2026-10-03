@@ -243,6 +243,38 @@
       border: 1px solid rgba(16, 185, 129, 0.3);
     }
 
+    .badge-running {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .badge-failed {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+
+    .error-notice-card {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+      color: #fca5a5;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+
+    .error-notice-title {
+      font-weight: 700;
+      color: #f87171;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
     /* Main Debate Viewer */
     .chat-area {
       display: flex;
@@ -633,6 +665,14 @@
       }
     }
 
+    function getStatusBadgeClass(status) {
+      const s = (status || '').toLowerCase();
+      if (s === 'completed') return 'badge-success';
+      if (s === 'failed' || s === 'error') return 'badge-failed';
+      if (s === 'running' || s === 'created') return 'badge-running';
+      return 'badge-success';
+    }
+
     function renderSidebar(debates) {
       debateListEl.innerHTML = '';
       debateCountBadge.textContent = `${debates.length}`;
@@ -651,12 +691,13 @@
         const dateStr = debate.createdAt
           ? new Date(debate.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
           : 'Recent';
+        const badgeClass = getStatusBadgeClass(debate.status);
 
         item.innerHTML = `
           <div class="debate-item-topic">${escapeHtml(debate.topic || 'Untitled Debate')}</div>
           <div class="debate-item-meta">
             <span>${debate.turn ?? '?'} / ${debate.maxTurns ?? '?'} turns · ${dateStr}</span>
-            <span class="badge badge-success">${escapeHtml(debate.status || 'completed')}</span>
+            <span class="badge ${badgeClass}">${escapeHtml(debate.status || 'completed')}</span>
           </div>
         `;
         debateListEl.appendChild(item);
@@ -707,6 +748,7 @@
       const agentAPrompt  = debate.customAgents?.A?.systemPrompt || '';
       const agentBPrompt  = debate.customAgents?.B?.systemPrompt || '';
       const turnPct       = debate.maxTurns ? Math.round((debate.turn / debate.maxTurns) * 100) : 0;
+      const badgeClass    = getStatusBadgeClass(debate.status);
 
       let html = `
         <!-- Debate Banner -->
@@ -718,7 +760,7 @@
               <div class="debate-title-label">Debate Proposition</div>
               <h1 class="debate-title">${escapeHtml(debate.topic)}</h1>
             </div>
-            <span class="badge badge-success">${escapeHtml((debate.status || '').toUpperCase())}</span>
+            <span class="badge ${badgeClass}">${escapeHtml((debate.status || '').toUpperCase())}</span>
           </div>
 
           <!-- Turn progress bar -->
@@ -727,6 +769,12 @@
             <div class="turn-bar"><div class="turn-bar-fill" style="width:${turnPct}%"></div></div>
             <span>${turnPct}%</span>
           </div>
+          ${debate.error ? `
+            <div class="error-notice-card">
+              <div class="error-notice-title">⚠️ Debate Stopped (API Error / Rate Limit Exceeded)</div>
+              <div>${escapeHtml(debate.error)}</div>
+            </div>
+          ` : ''}
 
           <!-- Agent Detail Cards -->
           <div class="agent-detail-grid">
