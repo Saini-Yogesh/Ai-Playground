@@ -63,9 +63,16 @@ export class GroqService {
         max_tokens: maxTokens,
       });
 
-      const responseText = completion.choices?.[0]?.message?.content?.trim();
+      const messageObj = completion.choices?.[0]?.message;
+      const responseText = (
+        messageObj?.content ||
+        messageObj?.reasoning_content ||
+        messageObj?.reasoning ||
+        ""
+      ).trim();
 
       if (!responseText) {
+        logger.error("Groq", `Empty response payload from model '${model}': ${JSON.stringify(completion.choices?.[0] || {})}`);
         throw new AppError(
           ErrorCodes.GROQ_API_ERROR,
           "Received empty response from Groq API.",
